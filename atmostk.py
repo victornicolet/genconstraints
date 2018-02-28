@@ -13,14 +13,22 @@ def print_encoding(enc):
     for clause in enc['clauses']:
         file.write(' '.join(list(map(str,clause))) + " 0\n")
 
+
 def minisat(enc):
-    subprocess.call(["./minisat", enc['name']])
+    subprocess.call(["./minisat", enc['name'], enc['name'] + ".res"])
+
 
 def rangeincl(a,b):
     return range(a, b + 1)
 
+
+def atleast1(n):
+    return rangeincl(1, n)
+
+
 def nthbit(c,n):
     return c & (1 << (n-1)) != 0
+
 
 def binary_encoding(k,n):
     OFFSET_T = n
@@ -55,6 +63,9 @@ def binary_encoding(k,n):
             for j in rangeincl(1, log2n):
                 clauses.append([-T(g, i), Phi(i, g, j)])
 
+    # Add 'at least one' constraint
+    clauses.append(atleast1(n))
+
     return {'name': ("binary_k%d_n%d" % (k, n)),
             'nvars': n + log2n * k + n * k,
             'nclauses': len(clauses),
@@ -75,8 +86,11 @@ def main():
 
     if en == 1:
         encoding = binary_encoding(k,n)
-    else:
+    elif en == 2:
         encoding = commander_encoding(k,n)
+    else:
+        print("Unkown encoding.")
+        return
 
     print_encoding(encoding)
     minisat(encoding)
