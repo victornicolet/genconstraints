@@ -1,4 +1,5 @@
 import sys
+import itertools
 import subprocess
 from math import log2, ceil
 
@@ -28,6 +29,15 @@ def atleast1(n):
 
 def nthbit(c,n):
     return c & (1 << (n-1)) != 0
+
+
+def atmostk_bin(l, k):
+    return list(map(lambda x: list(map(lambda i: -i, x)),
+                    list(itertools.combinations(l, k))))
+
+
+def atleastk_bin(l, k):
+    return list(map(lambda x: list(x), list(itertools.combinations(l, len(l) - k))))
 
 
 def binary_encoding(k,n):
@@ -64,7 +74,7 @@ def binary_encoding(k,n):
                 clauses.append([-T(g, i), Phi(i, g, j)])
 
     # Add 'at least one' constraint
-    clauses.append(atleast1(n))
+    clauses.extend(atleastk_bin(rangeincl(1, n), max(1, k-3)))
 
     return {'name': ("binary_k%d_n%d" % (k, n)),
             'nvars': n + log2n * k + n * k,
@@ -72,12 +82,30 @@ def binary_encoding(k,n):
             'clauses': clauses}
 
 
-def commander_encoding(k,n):
-    pass
+
+def commander_encoding(k, n, s):
+    if s < k:
+        print("For commander encoding, size should be greater than constraint.")
+        return
+
+    nsets = ((n - 1) / s) + 1
+
+    def c(i,j):
+        return n + i * nsets + j
+
+    clauses = []
+
+
+
+    return { 'name': ("commander_k%d_n%d_s%d" % (k, n, s)),
+             'nvars': n,
+             'nclauses': len(clauses),
+             'clauses': clauses}
 
 def main():
     if len(sys.argv) < 4:
         print("Usage: python atmostk.py NVARS K [ENCODING=1,2]")
+        return
 
     n = int(sys.argv[1])
     k = int(sys.argv[2])
@@ -87,7 +115,12 @@ def main():
     if en == 1:
         encoding = binary_encoding(k,n)
     elif en == 2:
-        encoding = commander_encoding(k,n)
+        if len(sys.argv) < 5:
+            print("For encoding 2 (commander encoding) you have to provide a size (last argument)")
+            return
+
+        s = int(sys.argv[4])
+        encoding = commander_encoding(k, n, s)
     else:
         print("Unkown encoding.")
         return
