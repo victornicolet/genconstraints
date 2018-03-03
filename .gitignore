@@ -3,6 +3,11 @@ MiniSat_v1.14_linux
 binary_*
 product_*
 commander_*
+seqcount_*
+exactk_*
 .idea
 emacs.desktop
+.emacs.desktop
 *~
+.~lock.experiments.ods#
+experiments.ods
