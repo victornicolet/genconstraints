@@ -144,7 +144,7 @@ def encode_propagation_experiment(en, k, lits):
 
 def main():
     if len(sys.argv) < 4:
-        print("Usage: python atmostk.py K [ENCODING=1,2,3] [N] [SEQUENCE OF LITERALS]")
+        print("Usage: python genconstraints.py K [ENCODING=1,2,3] [N] [SEQUENCE OF LITERALS]")
         return
 
     k = int(sys.argv[1])
