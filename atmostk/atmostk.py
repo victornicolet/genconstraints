@@ -252,7 +252,7 @@ def combine_encodings(enc1, enc2, n1, n2, delta):
 
 
 def minisat(enc):
-    subprocess.call(["./minisat", enc['name'], enc['name'] + ".res"])
+    subprocess.call(["../minisat", enc['name'], enc['name'] + ".res"])
 
 
 def rangeincl(a,b):
