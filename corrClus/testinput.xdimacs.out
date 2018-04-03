@@ -1,0 +1,157 @@
+c MaxHS 3.0.0
+c Instance: testinput.xdimacs
+c Parameter Settings
+c ============================================
+c  A: General MaxHS Options
+c   bvardecisions = false, fbeq = false, printBstSoln = false, printSoln = true,
+c   version = false, tolerance = 1e-06, cpu-lim = 2147483647, mem-lim = 2147483647,
+c   verb = 1, coretype = 0,
+c 
+c  B: Disjoint Phase Options
+c   dsjnt = true, dsjnt-mus-cpu-lim = 10, dsjnt-cpu-lim = 30,
+c 
+c  C: Seeding Options
+c   seed-learnts = true, seedtype = 3, seed-max = 524288, seed-all-limit = 768,
+c  
+c  D: Sequence of Sat Options
+c   lp-harden = true, find-forced = false, improve-model = false, use-ub-mipstart = true,
+c   max-cpu-improve-model = 10, max-cpu-before-cplex = 300, relaxfrac = 0.3, optcores-cpu-lim = -1,
+c   nonopt = 3, frac-rampup-start = 128, frac-rampup-end = 512, max-cores-before-cplex = 1536,
+c   sort-assumps = 0, max-size-improve-model = -1,
+c 
+c  E: Core Minimization Options
+c   mus-min-red = 0.1, mus-cpu-lim = 2.5, mintype = 1, mverb = 0,
+c  
+c  F: CPLEX Options
+c   cplex-tune = false, cplex-threads = 1,
+c 
+c  G: CPLEX Solution Pool and Populate Options
+c   cplextime-pop-cpu-lim = 7.5, cplex-solnpool-cap = 256, cplex-pop-nsoln = 256, cplex-populate = 1,
+c   ub-conflicts = 1,
+c 
+c  H: Preprocessing Options
+c   mx-sat-prepro = false, mx-constrain-hs = true, mx-seed-mxes = true, simplify-only = false,
+c   wcnf-harden = true, preprocess = true, wcnf-eqs = false, wcnf-units = true,
+c   mx-cpu-lim = 15, mx-transform-mxes = 2, mx-mem-lim = 1536, mx-find-mxes = 3,
+c   mx-hs-use-abs = 2,
+c 
+c  I: Debugging Options
+c   dump-prepro = false, cplex-data-chk = false, cplex-wrt-model = false, cplex-output = false,
+c  
+c  J: MINISAT solver Options
+c   luby = true, rnd-init = false, rnd-seed = 9.16483e+07, rinc = 2,
+c   gc-frac = 0.2, var-decay = 0.95, cla-decay = 0.999, rnd-freq = 0,
+c   min-learnts = 0, sverb = 0, rfirst = 100, ccmin-mode = 2,
+c   phase-saving = 2,
+c 
+c  K: MINISAT simplifier Options
+c   elim = true, rcheck = false, asymm = false, simp-gc-frac = 0.5,
+c   grow = 0, cl-lim = 20, sub-lim = 1000
+c ============================================
+c
+c Instance: testinput.xdimacs
+c Dimacs Vars: 15
+c Dimacs Clauses: 68
+c HARD: #Clauses = 60, Total Lits = 180, Ave Len = 3
+c SOFT: #Clauses = 8, Total Lits = 8, Ave Len = 1
+c Total Soft Clause Weight (+ basecost): 28 (+ 0), Dimacs Top = 263
+c SOFT%: 11.7647%
+c #distinct weights: 5, mean = 3.5, std. dev = 3.58569, min = 1, max = 10
+c Total Clauses: 68
+c Parse time: 0
+c Wcnf Space Required: 0MB
+c ================================
+c transitionWts = [ ] (0)
+c WCNF hardened 0 soft clauses
+c WCNF units: found 0 units
+c WCNF units: removed 0 hard clauses with 0 lits
+c WCNF units: removed 0 soft clauses with 0 lits
+c WCNF found 0 redundant hards and 0 duplicate or subsumed softs
+c WCNF mutexes: #mutexes found = 0
+c WCNF mx finder used 16 calls to UP engine
+c WCNF mutexes: original #softs 8 #softs after mx-transforms 8
+c WCNF mutexes: reduction in softs 0
+c After WCNF Simplification
+c HARD: #Clauses = 60, Total Lits = 180, Ave Len = 3
+c SOFT: #Clauses = 8, Total Lits = 8, Ave Len = 1
+c Total Soft Clause Weight (+ basecost): 28 (+ 0), Dimacs Top = 263
+c #distinct weights: 5, mean = 3.5, std. dev = 3.58569, min = 1, max = 10
+c Total Clauses: 68
+c Wcnf Space Required: 0.000816MB
+c ================================
+c Muser: Vars of hards = 15 vars to be frozen = 8
+c Muser Preprocess eliminated 0 variables. took 0 sec.
+c Using IBM CPLEX version 12.8.0.0 under IBM's Academic Initiative licencing program
+c Total used vars = 15 vars to be frozen = 8
+c MiniSat Preprocess eliminated 0 variables. took 0 sec.
+c Before solving sat solver has 60 clauses and 0 learnts
+c Init Bnds: SAT Time 0
+c New UB found 2
+c Elapsed time 0
+c Init Bnds: LB = 0 UB = 2
+c Init Bnds: Forced 0 literals.
+c Init Bnds: after sat solver solver has 60 clauses and 0 learnts
+c EqSeed: found 60 seedable constraints from input clauses
+c EqSeed: 0 cores 1 non-cores 5 mixed-cores 54 ordinary clauses
+c EqSeed: found 0 seedable constraints from  learnts
+c EqSeed: 0 cores 0 non-cores 0 mixed-cores 0 ordinary clauses
+c EqSeed: #seeded constraints 60
+c EqSeed: cores            0 Ave length 0
+c EqSeed: non-cores        1 Ave length 3
+c EqSeed: mixed cores      5 Ave length 3
+c EqSeed: ordinary clauses 54 Ave length 3
+c CPLEX has full input theory
+c Disjoint Phase
+c Computing Greedy Solution
+c GREEDY: += 0 Clauses. Average size =-nan
+c Greedy: soln cost = 0
+c Dsjnt: #Cores 1 with total weight 1
+c Dsjnt: Avg Core Size 5
+c Dsjnt: Time 0
+c **********Iter: 0 Elapsed Time = 0
+c CPLEX: += 61 Clauses. Average size =3.0327869
+c Greedy Solution # 0
+c Computing Greedy Solution
+c GREEDY: += 1 Clauses. Average size =5
+c Greedy: soln cost = 1
+c Greedy Solution yielded 1 conflicts
+c Greedy Solution # 1
+c Computing Greedy Solution
+c GREEDY: += 1 Clauses. Average size =5
+c Greedy: soln cost = 2
+c Greedy Solution yielded 1 conflicts
+c Greedy Solution # 2
+c Computing Greedy Solution
+c GREEDY: += 1 Clauses. Average size =6
+c Greedy: soln cost = 2
+c Greedy Solution yielded 0 conflicts
+c CPLEX returns incumbent with cost 2 and lower bound of 2 time = 0
+c CPLEX solution cost = 2 lower bound = 2
+c CPLEX found optimal solution to its current model
+c after CPLEX bnds: LB = 2 UB = 2
+c Solved by LB >= UB
+o 2
+s OPTIMUM FOUND
+v 1 2 -3 -4 -5 6 7 8 -9 -10 -11 12 13 14 -15 -16 -17 18 19 20 21 22 23 24 25 26 27 28 29
+c Solved: Number of falsified softs = 1
+c CPLEX: #constraints 61
+c CPLEX: Avg constraint size 3.0327869
+c CPLEX: #non-core constraints 56
+c CPLEX: Ave non-core size 3
+c SAT: #calls 8
+c SAT: Total time 0
+c SAT: #muser calls 3 (100 % successful)
+c SAT: Minimize time 0 (-nan%)
+c SAT: Avg constraint minimization 0
+c CPLEX: #calls 1
+c CPLEX: Total time 0
+c GREEDY: #calls 4
+c GREEDY: Total time 0
+c LP-Bounds: Hardened 0 softs 0 because not in cplex
+c LP-Bounds: Relaxed 0 softs
+c LP-Bounds: Total time 0
+c LP-Bounds: #calls 0
+c CPLEX: #calls 1
+c CPLEX: Total time 0
+c MEM MB: 40
+c CPU: 0
