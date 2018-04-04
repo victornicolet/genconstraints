@@ -15,8 +15,8 @@ def bench():
                         len(ccs_instance.clauses), len(ccs_instance.clusters), ccs_instance.timed_out, ccs_instance.solve_time,
                         ccs_instance.encode_time, ccs_instance.cluster_time, ccs_instance.solve_memory])
 
-    with open("results.csv", 'w+') as fp:
-        print(CSV_HEADER, file=fp)
+    with open("results.csv", 'a') as fp:
+        # print(CSV_HEADER, file=fp)
         for point in results:
             print(",".join([str(x) for x in point]), file=fp)
         fp.close()
