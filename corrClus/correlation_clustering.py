@@ -2,6 +2,12 @@ import sys
 import subprocess
 
 
+MAXSAT_SOLVER = 'maxhs'
+DIMACS_SUFFIX = '.xdimacs'
+OUT_SUFFIX = '.out'
+MAXSAT_TOP_WEIGHT = 263
+
+
 class MaxSATInstanceException(Exception):
     def __init__(self, msg):
         self.message = msg
@@ -12,7 +18,7 @@ class MaxSATInstance(object):
         n = len(pvars)
         self.vars = pvars
         self.clauses = clauses
-        self.top = 263 # Always pick this as the top weight
+        self.top = MAXSAT_TOP_WEIGHT
         self.nbvar = (n *  (n -1)) / 2
         self.nbclauses = len(clauses)
 
@@ -24,8 +30,8 @@ class MaxSATInstance(object):
             sumw += w
             maxw = max(w, maxw)
 
-        if sumw >= 263:
-            raise MaxSATInstanceException("Instance with sum weights > 263")
+        if sumw >= MAXSAT_TOP_WEIGHT:
+            raise MaxSATInstanceException("Instance with sum weights > %d" % MAXSAT_TOP_WEIGHT)
 
     def print_to_file(self, filename):
         with open(filename, 'w') as outf:
@@ -38,12 +44,6 @@ class MaxSATInstance(object):
                     weight = self.top
                 print("%d %s 0" % (weight, ' '.join([str(i) for i in clause[1]])), file=outf)
 
-
-def matches(a, b, pair_group):
-    for pair in pair_group:
-        if pair == (a, b) or pair == (b, a):
-            return True
-    return False
 
 
 class CorrelationClusteringInstance(object):
@@ -58,19 +58,15 @@ class CorrelationClusteringInstance(object):
         a = pair[0]
         b = pair[1]
         joins = {a, b}
-        old_clusters = self.clusters
-        for cluster in old_clusters:
+        new_clusters = []
+        for cluster in self.clusters:
             if a in cluster or b in cluster:
                 joins = joins.union(cluster)
-                self.clusters.remove(cluster)
+            else:
+                new_clusters.append(cluster)
 
-        print("++")
-        print(self.clusters)
-
-        self.clusters.append(joins)
-
-        print(self.clusters)
-        print("++")
+        new_clusters.append(joins)
+        self.clusters = new_clusters
 
     def add_diff(self, pair):
         a = pair[0]
@@ -78,22 +74,18 @@ class CorrelationClusteringInstance(object):
         ajoins = {a}
         bjoins = {b}
 
-        print('== %s' % str(pair))
-        old_clusters = self.clusters
+        new_clusters = []
         for cluster in self.clusters:
             if a in cluster:
                 ajoins = ajoins.union(cluster)
-                old_clusters.remove(cluster)
             elif b in cluster:
                 bjoins = bjoins.union(cluster)
-                old_clusters.remove(cluster)
+            else:
+                new_clusters.append(cluster)
 
-        old_clusters.append(ajoins)
-        old_clusters.append(bjoins)
-        self.clusters = old_clusters
-        print(self.clusters)
-        print('==>>>')
-
+        new_clusters.append(ajoins)
+        new_clusters.append(bjoins)
+        self.clusters = new_clusters
 
     def pair_lit(self, i, j):
         return i * len(self.data_points) + j
@@ -119,7 +111,6 @@ class CorrelationClusteringInstance(object):
                             clustering_cst.append((-1, [-wij, -wjk, wik]))
 
         self.clauses = weighted_clauses + clustering_cst
-
 
     def __str__(self):
         if len(self.data_points) < 20:
@@ -149,26 +140,16 @@ def pnz(i):
     else:
         return "_"
 
-def refng(a,i):
-    if i < 0:
-        return -a[-i]
-    else:
-        return a[i]
-
-
-def minisat(enc):
-    subprocess.call(["../minisat", enc['name'], enc['name'] + ".res"])
-
 
 def maxhs(infile):
-    outfile = infile + '.out'
+    outfile = infile + OUT_SUFFIX
     with open(outfile, 'w') as of:
-        subprocess.call(["maxhs", infile], stdout=of)
+        subprocess.call([MAXSAT_SOLVER, infile], stdout=of)
     return outfile
 
 
 def xdimacs(filename):
-    return filename + '.xdimacs'
+    return filename + DIMACS_SUFFIX
 
 
 def parse_maxhs_output(filename):
@@ -223,28 +204,24 @@ def solve(filename):
     # Call MaxHS to solve the Max Sat problem
     outfile = maxhs(xdimacs(filename))
     # Parse the solution to find the assignments
-    for assignment in parse_maxhs_output(outfile):
-        wij = abs(assignment)
+    for x in parse_maxhs_output(outfile):
+        wij = abs(x)
         i = int(wij / len(dpts))
         j = int(wij % len(dpts))
-        samecls = assignment > 0
         if i < j:
-            if samecls:
+            if x > 0:
                 ccs.add_join((dpts[i], dpts[j]))
             else:
                 ccs.add_diff((dpts[i], dpts[j]))
 
-
-    print(ccs)
+    return ccs
 
 
 def main():
     if len(sys.argv) < 1:
         print("Usage:./correlation_clustering.py CORRELATIONS_FILE\n")
     filename = sys.argv[1]
-    solve(filename)
-
-
+    print(solve(filename))
 
 if __name__ == "__main__":
     main()
