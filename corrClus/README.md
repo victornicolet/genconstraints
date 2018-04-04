@@ -34,3 +34,8 @@ Results are compiled in `results.csv`. `memory.png` shows how much memory is use
  for different  numbers of variables (there are n(n-1)/2 weights for n variables). `runtime.png` 
  shows how much time is spent solving the problems.
  
+ ![](runtime.png)
+ 
+ ![](memory.png)
+ 
+ 
