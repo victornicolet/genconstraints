@@ -1,0 +1,115 @@
+c MaxHS 3.0.0
+c Instance: testinput.xdimacs
+c Parameter Settings
+c ============================================
+c  A: General MaxHS Options
+c   bvardecisions = false, fbeq = false, printBstSoln = false, printSoln = true,
+c   version = false, tolerance = 1e-06, cpu-lim = 2147483647, mem-lim = 2147483647,
+c   verb = 1, coretype = 0,
+c 
+c  B: Disjoint Phase Options
+c   dsjnt = true, dsjnt-mus-cpu-lim = 10, dsjnt-cpu-lim = 30,
+c 
+c  C: Seeding Options
+c   seed-learnts = true, seedtype = 3, seed-max = 524288, seed-all-limit = 768,
+c  
+c  D: Sequence of Sat Options
+c   lp-harden = true, find-forced = false, improve-model = false, use-ub-mipstart = true,
+c   max-cpu-improve-model = 10, max-cpu-before-cplex = 300, relaxfrac = 0.3, optcores-cpu-lim = -1,
+c   nonopt = 3, frac-rampup-start = 128, frac-rampup-end = 512, max-cores-before-cplex = 1536,
+c   sort-assumps = 0, max-size-improve-model = -1,
+c 
+c  E: Core Minimization Options
+c   mus-min-red = 0.1, mus-cpu-lim = 2.5, mintype = 1, mverb = 0,
+c  
+c  F: CPLEX Options
+c   cplex-tune = false, cplex-threads = 1,
+c 
+c  G: CPLEX Solution Pool and Populate Options
+c   cplextime-pop-cpu-lim = 7.5, cplex-solnpool-cap = 256, cplex-pop-nsoln = 256, cplex-populate = 1,
+c   ub-conflicts = 1,
+c 
+c  H: Preprocessing Options
+c   mx-sat-prepro = false, mx-constrain-hs = true, mx-seed-mxes = true, simplify-only = false,
+c   wcnf-harden = true, preprocess = true, wcnf-eqs = false, wcnf-units = true,
+c   mx-cpu-lim = 15, mx-transform-mxes = 2, mx-mem-lim = 1536, mx-find-mxes = 3,
+c   mx-hs-use-abs = 2,
+c 
+c  I: Debugging Options
+c   dump-prepro = false, cplex-data-chk = false, cplex-wrt-model = false, cplex-output = false,
+c  
+c  J: MINISAT solver Options
+c   luby = true, rnd-init = false, rnd-seed = 9.16483e+07, rinc = 2,
+c   gc-frac = 0.2, var-decay = 0.95, cla-decay = 0.999, rnd-freq = 0,
+c   min-learnts = 0, sverb = 0, rfirst = 100, ccmin-mode = 2,
+c   phase-saving = 2,
+c 
+c  K: MINISAT simplifier Options
+c   elim = true, rcheck = false, asymm = false, simp-gc-frac = 0.5,
+c   grow = 0, cl-lim = 20, sub-lim = 1000
+c ============================================
+c
+c Instance: testinput.xdimacs
+c Dimacs Vars: 6
+c Dimacs Clauses: 18
+c HARD: #Clauses = 12, Total Lits = 36, Ave Len = 3
+c SOFT: #Clauses = 6, Total Lits = 6, Ave Len = 1
+c Total Soft Clause Weight (+ basecost): 6 (+ 0), Dimacs Top = 263
+c SOFT%: 33.3333%
+c #distinct weights: 1, mean = 1, std. dev = 0, min = 1, max = 1
+c Total Clauses: 18
+c Parse time: 0
+c Wcnf Space Required: 0MB
+c ================================
+c transitionWts = [ ] (0)
+c WCNF hardened 0 soft clauses
+c WCNF units: found 0 units
+c WCNF units: removed 0 hard clauses with 0 lits
+c WCNF units: removed 0 soft clauses with 0 lits
+c WCNF found 0 redundant hards and 0 duplicate or subsumed softs
+c WCNF mutexes: #mutexes found = 0
+c WCNF mx finder used 12 calls to UP engine
+c WCNF mutexes: original #softs 6 #softs after mx-transforms 6
+c WCNF mutexes: reduction in softs 0
+c After WCNF Simplification
+c HARD: #Clauses = 12, Total Lits = 36, Ave Len = 3
+c SOFT: #Clauses = 6, Total Lits = 6, Ave Len = 1
+c Total Soft Clause Weight (+ basecost): 6 (+ 0), Dimacs Top = 263
+c #distinct weights: 1, mean = 1, std. dev = 0, min = 1, max = 1
+c Total Clauses: 18
+c Wcnf Space Required: 0.000216MB
+c ================================
+c Muser: Vars of hards = 6 vars to be frozen = 6
+c Using IBM CPLEX version 12.8.0.0 under IBM's Academic Initiative licencing program
+c Total used vars = 6 vars to be frozen = 6
+c MiniSat Preprocess eliminated 0 variables. took 0 sec.
+c Before solving sat solver has 12 clauses and 0 learnts
+c Init Bnds: SAT Time 0
+c New UB found 0
+c Elapsed time 0
+c Solved by Init Bnds.
+o 0
+s OPTIMUM FOUND
+v 1 -2 3 4 5 -6 7 8 9 10 -11
+c Solved: Number of falsified softs = 0
+c CPLEX: #constraints 0
+c CPLEX: Avg constraint size -nan
+c CPLEX: #non-core constraints 0
+c CPLEX: Ave non-core size -nan
+c SAT: #calls 1
+c SAT: Total time 0
+c SAT: #muser calls 0 (-nan % successful)
+c SAT: Minimize time 0 (-nan%)
+c SAT: Avg constraint minimization -nan
+c CPLEX: #calls 0
+c CPLEX: Total time 0
+c GREEDY: #calls 0
+c GREEDY: Total time 0
+c LP-Bounds: Hardened 0 softs 0 because not in cplex
+c LP-Bounds: Relaxed 0 softs
+c LP-Bounds: Total time 0
+c LP-Bounds: #calls 0
+c CPLEX: #calls 0
+c CPLEX: Total time 0
+c MEM MB: 40
+c CPU: 0

@@ -1,5 +1,5 @@
 import glob
-from corrClus import correlation_clustering
+import correlation_clustering
 
 TEST_FILES = 'tests/*clusters'
 RESULT_SUFFIX = '.out'

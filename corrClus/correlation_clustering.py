@@ -1,6 +1,6 @@
 import sys
 import subprocess
-
+import time
 
 MAXSAT_SOLVER = 'maxhs'
 DIMACS_SUFFIX = '.xdimacs'
@@ -45,10 +45,14 @@ class MaxSATInstance(object):
                 print("%d %s 0" % (weight, ' '.join([str(i) for i in clause[1]])), file=outf)
 
 
-
 class CorrelationClusteringInstance(object):
 
     def __init__(self, file, data_points, weights):
+        self.encode_time = 0.0
+        self.solve_time = 0.0
+        self.cluster_time = 0.0
+        self.solve_memory = 0
+        self.timed_out = False
         self.file = file
         self.data_points = data_points
         self.weights = weights
@@ -92,8 +96,10 @@ class CorrelationClusteringInstance(object):
         return i * len(self.data_points) + j
 
     def create_maxsat_instance(self):
+        start = time.time()
         weighted_clauses = []
         clustering_cst = []
+        zeroes = 0
         n = len(self.data_points)
         for i in range(0, n):
             for j in range(i + 1, n):
@@ -102,6 +108,8 @@ class CorrelationClusteringInstance(object):
                 w = self.weights[i][j]
                 if w != 0:
                     weighted_clauses.append((abs(w), [wij if w > 0 else -wij]))
+                else:
+                    zeroes += 1
                 for k in range(0, n):
                     if k != j and k != i:
                         wik = self.pair_lit(i, k) if k > i else self.pair_lit(k, i)
@@ -111,19 +119,32 @@ class CorrelationClusteringInstance(object):
                         if wij > wjk:
                             clustering_cst.append((-1, [-wij, -wjk, wik]))
 
+        self.encode_time = time.time() - start
         self.clauses = weighted_clauses + clustering_cst
+        n = len(self.data_points)
+        print(len(self.clauses) - (int((n*(n-2)*(n-1))/2) + int(n * (n-1) / 2)) + zeroes)
 
     def __str__(self):
         if len(self.data_points) < 20:
-            return ("FILE %s:\n%d data points:\n%s\nWeights:\n%s\n\n%d clusters:\n%s" %
+            return ("== FILE %s:\n%d data points (%d clauses):\n%s\nWeights:\n%s\n\n%d clusters:\n%s\nTIME:%s\t%s\t%s" %
                     (self.file,
                       len(self.data_points),
+                      len(self.clauses),
                      " ".join([str(x) for x in self.data_points]),
                      "\n".join([' '.join([pnz(i) for i in x]) for x in self.weights]),
                      len(self.clusters),
-                     " ".join([str(c) for c in self.clusters])))
+                     " ".join([str(c) for c in self.clusters]),
+                     "encoding %4.4f s" % self.encode_time,
+                     "solving %4.4f s" % self.solve_time,
+                     "cluster construction %4.4f s" % self.cluster_time))
         else:
-            return "%d data points, %d clusters found." % (len(self.data_points), len(self.clusters))
+            return "== FILE %s:\n%d data points (%d clauses), %d clusters found.\nTIME:%s\t%s\t%s" % \
+                   (self.file,
+                   len(self.data_points), len(self.clauses), len(self.clusters),
+                    "encoding %4.4f s" % self.encode_time,
+                    "solving %4.4f s" % self.solve_time,
+                    "cluster construction %4.4f s" % self.cluster_time)
+
 
 
 class FileInputError(Exception):
@@ -143,10 +164,14 @@ def pnz(i):
         return "_"
 
 
-def maxhs(infile):
+def maxhs(infile, timeout):
     outfile = infile + OUT_SUFFIX
     with open(outfile, 'w') as of:
-        subprocess.call([MAXSAT_SOLVER, infile], stdout=of)
+        try:
+            subprocess.call([MAXSAT_SOLVER, infile], stdout=of, timeout=timeout)
+        except subprocess.TimeoutExpired:
+            outfile = "TIMEOUT"
+
     return outfile
 
 
@@ -155,16 +180,25 @@ def xdimacs(filename):
 
 
 def parse_maxhs_output(filename):
-    line = ""
+    sol_found = False
+    assigns = []
+    time = -1.0
+    memory = -1
     with open(filename, 'r') as file:
         for line in file.readlines():
+            if line == "s OPTIMUM FOUND\n":
+                sol_found = True
             if line[0] == 'v':
-                break
-        assigns = [int(x) for x in line.split(' ')[1:]]
-        return assigns
+                assigns = [int(x) for x in line.split(' ')[1:]]
+            if line.startswith("c CPU"):
+                time = float(line.split(" ")[2])
+            if line.startswith("c MEM MB"):
+                memory = int(line.split(" ")[3])
+
+        return {'solution': assigns, 'time': time, 'memory': memory}
 
 
-def solve(filename):
+def solve(filename, timeout=10000):
     dpts = []
     weights = []
     with open(filename, 'r') as fn:
@@ -203,9 +237,17 @@ def solve(filename):
     msat = MaxSATInstance(dpts, ccs.clauses)
     msat.print_to_file(xdimacs(filename))
     # Call MaxHS to solve the Max Sat problem
-    outfile = maxhs(xdimacs(filename))
+    mhs_out = maxhs(xdimacs(filename), timeout)
+    # If MaxHS timed out
+    if mhs_out == "TIMEOUT":
+        ccs.timed_out = True
+        return ccs
     # Parse the solution to find the assignments
-    for x in parse_maxhs_output(outfile):
+    soln = parse_maxhs_output(mhs_out)
+    ccs.solve_time = soln['time']
+    ccs.solve_memory = soln['memory']
+    start = time.time()
+    for x in soln['solution']:
         wij = abs(x)
         i = int(wij / len(dpts))
         j = int(wij % len(dpts))
@@ -214,7 +256,7 @@ def solve(filename):
                 ccs.add_join((dpts[i], dpts[j]))
             else:
                 ccs.add_diff((dpts[i], dpts[j]))
-
+    ccs.cluster_time = time.time() - start
     return ccs
 
 

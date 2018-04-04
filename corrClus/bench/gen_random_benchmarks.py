@@ -1,9 +1,12 @@
 # Script to generate 100 random benchmarks with increasing number of variables
 from random import *
-
+import sys
 
 if __name__ == '__main__':
-    for benchno in range(10,110):
+    if len(sys.argv) < 2:
+        print("Usage: python3 gen_random_benchmarks.py NUM_OF_BENCHMARKS")
+        exit(0)
+    for benchno in range(10, int(sys.argv[1])):
         weights = []
         for i in range(0, benchno):
             wline = []
