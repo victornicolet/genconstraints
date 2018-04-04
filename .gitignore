@@ -11,3 +11,6 @@ emacs.desktop
 *~
 .~lock.experiments.ods#
 atmostk/experiments.ods
+*.xdimacs
+*.xdimacs.out
+__pycache__

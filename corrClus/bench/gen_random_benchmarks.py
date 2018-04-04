@@ -8,7 +8,7 @@ if __name__ == '__main__':
         for i in range(0, benchno):
             wline = []
             for j in range(0, i):
-                wline.append(float(randint(-50, 50)) / 50.0)
+                wline.append(randint(-10, 10))
             wline.append(1)
             weights.append(wline)
 
