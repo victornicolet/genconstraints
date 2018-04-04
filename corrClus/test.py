@@ -1,5 +1,5 @@
 import glob
-from . import correlation_clustering
+from corrClus import correlation_clustering
 
 TEST_FILES = 'tests/*clusters'
 RESULT_SUFFIX = '.out'
@@ -13,9 +13,12 @@ def parse_results(finput):
     return clusters
 
 def same_clustering(c1, c2):
-    assert len(c1) == len(c2)
+    if len(c1) != len(c2):
+        return False
     for c in c1:
-        assert c in c2
+        if c not in c2:
+            return False
+    return True
 
 
 def main():
@@ -23,7 +26,12 @@ def main():
     for finput in testinputs:
         ccs = correlation_clustering.solve(finput)
         clusters = parse_results(finput)
-        assert same_clustering(ccs.clusters, clusters)
+        if same_clustering(ccs.clusters, clusters):
+            print("PASSED %s" % finput)
+        else:
+            print("FAILED %s" % finput)
+            print("Expected: %s" % str(clusters))
+            print("Found : %s" % str(ccs.clusters))
 
 if __name__ == "__main__":
         main()

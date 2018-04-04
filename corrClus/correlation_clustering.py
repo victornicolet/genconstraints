@@ -48,7 +48,8 @@ class MaxSATInstance(object):
 
 class CorrelationClusteringInstance(object):
 
-    def __init__(self, data_points, weights):
+    def __init__(self, file, data_points, weights):
+        self.file = file
         self.data_points = data_points
         self.weights = weights
         self.clauses = []
@@ -114,8 +115,9 @@ class CorrelationClusteringInstance(object):
 
     def __str__(self):
         if len(self.data_points) < 20:
-            return ("%d data points:\n%s\nWeights:\n%s\n\n%d clusters:\n%s" %
-                    (len(self.data_points),
+            return ("FILE %s:\n%d data points:\n%s\nWeights:\n%s\n\n%d clusters:\n%s" %
+                    (self.file,
+                      len(self.data_points),
                      " ".join([str(x) for x in self.data_points]),
                      "\n".join([' '.join([pnz(i) for i in x]) for x in self.weights]),
                      len(self.clusters),
@@ -157,7 +159,6 @@ def parse_maxhs_output(filename):
     with open(filename, 'r') as file:
         for line in file.readlines():
             if line[0] == 'v':
-                vars = line
                 break
         assigns = [int(x) for x in line.split(' ')[1:]]
         return assigns
@@ -174,7 +175,7 @@ def solve(filename):
         while True:
             line+=1
             ln = fn.readline()
-            if ln == "":
+            if ln == "" or ln == "\n":
                 break
             constraint = [int(x) for x in ln.split(sep=' ')]
             if len(constraint) < 3:
@@ -195,7 +196,7 @@ def solve(filename):
             else:
                 putweight(y, x, w)
 
-    ccs = CorrelationClusteringInstance(dpts, weights)
+    ccs = CorrelationClusteringInstance(filename, dpts, weights)
 
     ccs.create_maxsat_instance()
     # Encode the problem in a max sat instance

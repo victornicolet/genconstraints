@@ -1,5 +1,7 @@
-TO_CONVERT = ['selfesteem']
+from glob import glob
 
+TO_CONVERT = ['selfesteem']
+TO_CONVERT.extend(glob("./random_*_orig"))
 
 def convert(file):
     data = []
