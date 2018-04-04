@@ -14,3 +14,4 @@ atmostk/experiments.ods
 *.xdimacs
 *.xdimacs.out
 __pycache__
+random_*
